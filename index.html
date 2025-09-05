@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>রেস্টুরেন্ট অর্ডার - গ্রাহক</title>
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <h1>স্বাদের রাজ্য</h1>
+            </div>
+            <div class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Search Bar -->
+            <div class="search-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="খাবার খুঁজুন..." id="searchInput">
+                </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>খাবার লোড হচ্ছে...</p>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be loaded here -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <i class="fas fa-utensils"></i>
+                <h3>কোন খাবার পাওয়া যায়নি</h3>
+                <p>অন্য ক্যাটেগরি দেখুন বা পরে আবার চেষ্টা করুন</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Place Order Button -->
+    <div class="place-order-btn" id="placeOrderBtn" style="display: none;">
+        <button onclick="showOrderSummary()">
+            <i class="fas fa-shopping-cart"></i>
+            অর্ডার দিন (<span id="selectedCount">0</span>টি আইটেম)
+        </button>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-container">
+            <!-- Static All Button -->
+            <button class="nav-item nav-all active" data-category="all">
+                <i class="fas fa-th-large"></i>
+                <span>সব</span>
+            </button>
+            
+            <!-- Scrollable Categories Container -->
+            <div class="nav-categories-container">
+                <div class="nav-categories" id="navCategories">
+                    <!-- Categories will be loaded dynamically here -->
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Order Summary Modal -->
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>অর্ডার সামারি</h2>
+                <button class="close-btn" onclick="closeOrderModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="order-items" id="orderItems">
+                    <!-- Selected items will appear here -->
+                </div>
+                <div class="table-number-section" id="tableNumberSection">
+                    <div class="input-row">
+                        <div class="name-input-section">
+                            <label for="customerName">আপনার নাম (ঐচ্ছিক):</label>
+                            <input type="text" id="customerName" placeholder="আপনার নাম লিখুন">
+                        </div>
+                        
+                        <div class="table-input-section">
+                            <label for="manualTableNumber">টেবিল নম্বর:</label>
+                            <select id="manualTableNumber">
+                                <option value="">টেবিল নম্বর নির্বাচন করুন</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-total">
+                    <div class="total-info">
+                        <span class="item-count"><span id="itemCount">0</span>টি আইটেম</span>
+                        <h3>মোট: ৳<span id="totalPrice">0</span></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="confirmOrder()">
+                    <i class="fas fa-check"></i>
+                    অর্ডার নিশ্চিত করুন
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" id="successMessage">
+        <div class="success-content">
+            <i class="fas fa-check-circle"></i>
+            <h3>অর্ডার সফল!</h3>
+            <p>আপনার অর্ডার সফলভাবে জমা দেওয়া হয়েছে। আমরা শীঘ্রই প্রস্তুত করব।</p>
+            <button onclick="closeSuccessMessage()">ধন্যবাদ</button>
+        </div>
+    </div>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
